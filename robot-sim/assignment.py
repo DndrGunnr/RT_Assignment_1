@@ -86,9 +86,26 @@ def find_center():
 	else :
 		return -1,-1
 		
-def move_to_marker()
-	if status==0
-		while
+def move_to_marker(distance, angle)
+	if angle<-a_th:
+		turn(-distance,0.5)
+	if angle>a_th:
+		turn(distance,0.5)
+	else:
+		if distance>d_th:
+			drive(20,2)
+		else:
+			if status==0:
+				R.grab()
+				drive(-20,2)
+				status=1
+			else:
+				R.release()
+				drive(-20,2)
+				status=0
+				moved_markers.appens(next_marker)
+				next_marker=0
+			
 	
 		
 while True
