@@ -34,7 +34,7 @@ def turn(speed, seconds):
 def find_token():
 	global next_marker
 	distance=100
-	'''when a marker is being released or when the simulation starts'''
+	'''when a marker has been released or when the simulation starts'''
 	if next_marker==0:
 		for token in R.see():
 			'''check if the seen marker is already been moved'''
@@ -61,12 +61,14 @@ def find_center():
 	global center_code,next_marker,moved_markers
 	distance=100
 	if center_code==0:
+	'''the first marker in sight will become the center marker'''
 		for token in R.see():
 			if token.dist<distance:
 				distance=token.dist
 				angle=token.rot_y
 				center_code=token.info.code
 		if distance<100:
+			'''add center to moved_markers as to not consider it as movable'''
 			moved_markers.append(center_code)
 			return distance, angle
 		else:
@@ -95,6 +97,7 @@ def move_to_marker(distance, angle):
 		else:
 			if status==0:
 				R.grab()
+				'''step back to avoid unnecesarely moving possible neighbour blocks'''
 				drive(-75,0.3)
 				status=1
 				print(status)
@@ -134,6 +137,7 @@ number_of_markers=6
 def main():
 	global status
 	while len(moved_markers)<number_of_markers:
+		'''initialization of center marker'''
 		while center_code==0:
 			distance,angle=find_center()
 			turn(40,0.05)
@@ -141,6 +145,7 @@ def main():
 			distance,angle=find_token()
 		elif status==1:
 			distance,angle=find_center()
+		'''if nothing is in sight, turn slightly right'''
 		if distance==-1:
 			turn(40,0.05)
 		else:
