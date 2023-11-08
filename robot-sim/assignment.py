@@ -39,11 +39,11 @@ def find_token():
 		for token in R.see():
 			'''check if the seen marker is already been moved'''
 			if token.info.code not in moved_markers:
-				'''choosing next marker as nearest unmoved 					marker'''
+				'''choosing next marker as nearest unmoved marker'''
 				if token.dist<distance:
 					distance=token.dist
 					angle=token.rot_y
-					next_marker=token.info.code
+					next_marker=token.info.code	
 					return distance, angle
 		if distance==100:
 			return -1,-1
@@ -60,7 +60,6 @@ def find_token():
 def find_center():
 	global center_code,next_marker,moved_markers
 	distance=100
-	print(center_code)
 	if center_code==0:
 		for token in R.see():
 			if token.dist<distance:
@@ -86,22 +85,22 @@ def find_center():
 def move_to_marker(distance, angle):
 	global status,moved_markers,next_marker,status
 	if angle<-a_th:
-		turn(-distance,0.5)
+		turn(-2*distance,0.1)
 	if angle>a_th:
-		turn(distance,0.5)
+		turn(2*distance,0.1)
 	else:
-		'''if I have to drop a marker near the center block I can't 			use the regular threshold'''
+		'''status varible used to change threshold based on the target'''
 		if distance>d_th+status*0.3:
-			drive(30,1)
+			drive(100,0.02)
 		else:
 			if status==0:
 				R.grab()
-				drive(-20,2)
+				drive(-75,0.3)
 				status=1
 				print(status)
 			else:
 				R.release()
-				drive(-20,2)
+				drive(-75,0.3)
 				status=0
 				print(status)
 				moved_markers.append(next_marker)
@@ -128,22 +127,25 @@ moved_markers=[]
 
 R = Robot()
 """ instance of the class Robot"""
+
+number_of_markers=6
+'''implemented to ease the possible application to different scenarios'''
 			
 def main():
 	global status
-	while True:
+	while len(moved_markers)<number_of_markers:
 		while center_code==0:
 			distance,angle=find_center()
-			turn(20,1)
+			turn(40,0.05)
 		if status==0:
 			distance,angle=find_token()
 		elif status==1:
 			distance,angle=find_center()
 		if distance==-1:
-			turn(20,0.3)
+			turn(40,0.05)
 		else:
 			move_to_marker(distance,angle)
-			
+	exit()
 		
 			
 main()
