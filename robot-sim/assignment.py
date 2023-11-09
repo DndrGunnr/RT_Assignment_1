@@ -30,6 +30,14 @@ def turn(speed, seconds):
     time.sleep(seconds)
     R.motors[0].m0.power = 0
     R.motors[0].m1.power = 0
+def count_tokens():
+	seen_list=[]
+	for i in range (1,8):
+		for token in R.see():
+			if token.info.code not in seen_list:
+						seen_list.append(token.info.code)
+		turn(20,1)
+	return seen_list
 
 def find_token():
 	global next_marker
@@ -61,7 +69,7 @@ def find_center():
 	global center_code,next_marker,moved_markers
 	distance=100
 	if center_code==0:
-	'''the first marker in sight will become the center marker'''
+		'''the first marker in sight will become the center marker'''
 		for token in R.see():
 			if token.dist<distance:
 				distance=token.dist
@@ -100,14 +108,14 @@ def move_to_marker(distance, angle):
 				'''step back to avoid unnecesarely moving possible neighbour blocks'''
 				drive(-75,0.3)
 				status=1
-				print(status)
+				print("status= ",status)
 			else:
 				R.release()
 				drive(-75,0.3)
 				status=0
-				print(status)
+				print("status= ",status)
 				moved_markers.append(next_marker)
-				print(moved_markers)
+				print("moved markers= ",moved_markers)
 				next_marker=0
 
 a_th = 2.0
@@ -136,7 +144,9 @@ number_of_markers=6
 			
 def main():
 	global status
-	while len(moved_markers)<number_of_markers:
+	seen_token=count_tokens()
+	print("token list= ",seen_token)
+	while len(moved_markers)<len(seen_token):
 		'''initialization of center marker'''
 		while center_code==0:
 			distance,angle=find_center()
