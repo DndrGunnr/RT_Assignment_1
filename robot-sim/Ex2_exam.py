@@ -92,6 +92,7 @@ def find_closest_silver():
 					#the found token sets the lowest distance to robot
 					distance=token.dist
 					center_code=token.info.code
+		turn(20,1)
 	
 	
 		
